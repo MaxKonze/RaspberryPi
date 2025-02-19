@@ -1,11 +1,9 @@
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from Doorlock import LockStatus
 import uvicorn
 
 app = FastAPI()
 
-class LockStatus(BaseModel):
-    locked: bool
 
 @app.get("/")
 async def root():
@@ -17,7 +15,7 @@ async def ping():
 
 @app.post("/status")
 async def get_status():
-    return {"locked": False}
+    return {"locked": LockStatus.locked}
 
 @app.get("/lock")
 async def lock_door():
