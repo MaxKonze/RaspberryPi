@@ -1,9 +1,12 @@
-from pydantic import BaseModel
-
-class DoorLock(BaseModel):
-
-    locked: bool
-    
+class DoorLock:
     def __init__(self):
+        self.locked = True
+
+    def lock(self):
+        self.locked = True
+
+    def unlock(self):
         self.locked = False
-    
+
+    def is_locked(self):
+        return self.locked

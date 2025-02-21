@@ -16,7 +16,7 @@ This project is designed to control a door lock using a Raspberry Pi. It include
     ```
 2. Navigate to the project directory:
     ```sh
-    cd DoorLock/RaspberryPi
+    cd DoorLock
     ```
 3. Install the required Python libraries:
     ```sh

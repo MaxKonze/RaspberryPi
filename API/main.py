@@ -1,13 +1,19 @@
-from fastapi import FastAPI, HTTPException
-from Doorlock import LockStatus
+from fastapi import FastAPI, HTTPException, Request, Depends
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from Doorlock import DoorLock
 import uvicorn
 
 app = FastAPI()
+templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
+door_lock = DoorLock()
 
-@app.get("/")
-async def root():
-    return {"message": "Willkommen zur Smart Door Lock API"}
+@app.get("/", response_class=HTMLResponse)
+async def read_root(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 @app.get("/ping")
 async def ping():
@@ -15,15 +21,24 @@ async def ping():
 
 @app.post("/status")
 async def get_status():
-    return {"locked": LockStatus.locked}
+    return {"locked": door_lock.is_locked()}
 
 @app.get("/lock")
 async def lock_door():
+    
+    door_lock.lock()
+    
     return {"message": "Tür verriegelt"}
 
 @app.post("/unlock")
 async def unlock_door():
+    
+    door_lock.unlock()
     return {"message": "Tür entriegelt"}
+
+@app.get("/status-page", response_class=HTMLResponse)
+async def status_page(request: Request):
+    return templates.TemplateResponse("status.html", {"request": request, "locked": door_lock.is_locked()})
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
