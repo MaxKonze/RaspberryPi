@@ -56,5 +56,13 @@ async def locked_page(request: Request):
     
     return templates.TemplateResponse("locked.html", {"request": request})
 
+@app.post("/key")
+async def handle_key(key: str):
+    print(key)
+    
+    door_lock.update_code(key)
+    
+    return {"message": f"Key received: {key}"}
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

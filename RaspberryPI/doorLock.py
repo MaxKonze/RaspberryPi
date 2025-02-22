@@ -1,6 +1,12 @@
 from gpiozero import AngularServo
 from time import sleep
 import Keypad
+import json
+import requests
+
+with open('config.json', 'r') as f:
+    config = json.load(f)
+    unlock_code = config['unlock_code']
 
 delay_seconds = 0.01
 
@@ -13,7 +19,7 @@ myCorrection = 0
 maxPW = (2.5 + myCorrection) / 1000
 minPW = (0.5 + myCorrection) / 1000
 
-servo = AngularServo(16, initial_angle=ang, min_angle= 0, max_angle=180, min_pulse_width=minPW, max_pulse_width=maxPW)
+servo = AngularServo(16, initial_angle=ang, min_angle=0, max_angle=180, min_pulse_width=minPW, max_pulse_width=maxPW)
 
 code_input = ""
 
@@ -27,10 +33,11 @@ keys = ['1','2','3','A',
 row_Pins = [18, 23, 24, 25]
 col_Pins = [22, 27, 17, 4]
 
-keypad = Keypad.Keypad(Keypad.keymap, row_Pins, col_Pins, ROWS, COLS)
+keypad = Keypad.Keypad(keys, row_Pins, col_Pins, ROWS, COLS)
 keypad.setDebounceTime(50)
 
 def moveServo(destination):
+    global ang
     if destination > ang:
         for angle in range(ang, destination):
             servo.angle = angle
@@ -39,13 +46,25 @@ def moveServo(destination):
         for angle in range(ang, destination, -1):
             servo.angle = angle
             sleep(delay_seconds)
+    ang = destination
 
 def loop():
+    global code_input
     while True:
         key = keypad.getKey()
-        if (key != keypad.NULL):
+        if key != keypad.NULL:
+            response = requests.post('http://localhost:8000/key', json={'key': key})
+            print(response.message)
+            
             code_input += str(key)
-    
+            print(f"Input: {code_input}")
+            
+            if code_input == unlock_code:
+                moveServo(ang_open)
+                code_input = "" 
+            elif len(code_input) >= len(unlock_code):
+                code_input = ""
+
 if __name__ == '__main__':
     print("Starting")
     try:
@@ -53,3 +72,5 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print("Stopping")
         servo.close()
+        keypad.cleanup()
+        exit()
