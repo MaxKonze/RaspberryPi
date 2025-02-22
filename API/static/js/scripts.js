@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     lockButton.addEventListener("click", async function() {
         const response = await fetch("/lock");
+        const data = await response.json();
         updateStatus();
     });
 
@@ -15,13 +16,10 @@ document.addEventListener("DOMContentLoaded", function() {
         const response = await fetch("/unlock", {
             method: "POST"
         });
+        const data = await response.json();
         updateStatus();
     });
 
-    statusButton.addEventListener("click", async function() {
-        window.location.href = "/status-page/";
-    });
-    
 
     async function updateStatus() {
         const response = await fetch("/status", {
@@ -29,8 +27,10 @@ document.addEventListener("DOMContentLoaded", function() {
         });
         const data = await response.json();
         statusMessage.textContent = data.locked ? "Die Tür ist verriegelt." : "Die Tür ist entriegelt.";
-        
-    }
 
+        if (data.locked) {
+            window.location.reload();
+        }
+    }
     updateStatus();
 });
