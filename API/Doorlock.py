@@ -1,6 +1,6 @@
 class DoorLock:
     def __init__(self):
-        self.locked = True
+        self.locked = False
 
     def lock(self):
         self.locked = True

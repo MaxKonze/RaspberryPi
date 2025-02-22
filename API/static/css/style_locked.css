@@ -1,0 +1,36 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+}
+
+.lock-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+
+.lock-icon {
+    font-size: 100px;
+    color: #dc3545;
+    animation: lock-animation 1s infinite alternate;
+}
+
+@keyframes lock-animation {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.2);
+    }
+}
+
+h1 {
+    margin-top: 20px;
+    font-size: 24px;
+    color: #343a40;
+}
