@@ -25,7 +25,15 @@ This project is designed to control a door lock using a Raspberry Pi. It include
 
 ## Usage
 
-Run the main script to start the door lock control:
+Run the main script to start the door lock control API:
 ```sh
 python main.py
+```
+Run the doorLock script to start the door lock control on the Raspberry Pi:
+```sh
+cd RaspberryPi
+```
+
+```sh
+python doorLock.py
 ```

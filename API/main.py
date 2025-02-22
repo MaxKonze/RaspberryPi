@@ -50,6 +50,10 @@ async def status_page(request: Request):
 
 @app.get("/locked", response_class=HTMLResponse)
 async def locked_page(request: Request):
+    
+    if door_lock.is_locked() == False:
+        return RedirectResponse("/")
+    
     return templates.TemplateResponse("locked.html", {"request": request})
 
 if __name__ == "__main__":
