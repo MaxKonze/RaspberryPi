@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
     const lockButton = document.getElementById("lockButton");
     const unlockButton = document.getElementById("unlockButton");
-    const statusButton = document.getElementById("statusButton");
     const statusMessage = document.getElementById("statusMessage");
 
     console.log("DOM fully loaded and parsed");
@@ -31,6 +30,9 @@ document.addEventListener("DOMContentLoaded", function() {
         if (data.locked) {
             window.location.reload();
         }
-    }
+    };
+
+
     updateStatus();
+    
 });
