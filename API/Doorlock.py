@@ -3,14 +3,14 @@ import json
 class DoorLock:
     def __init__(self):
         self.locked = False
-        self.code = None
+        self.code = ""
         
         with open('config.json', 'r') as f:
             config = json.load(f)
             self.unlock_code = config['unlock_code']
 
     def reset_code(self):
-        self.code = ""
+        self.code = self.code[-1]
     
     def lock(self):
         self.locked = True
@@ -25,7 +25,7 @@ class DoorLock:
     def update_code(self, code):
         self.code += code
         
-        if len(self.code) >= 4:
+        if len(self.code) > 4:
             self.reset_code()
     
     def checkPin(self):

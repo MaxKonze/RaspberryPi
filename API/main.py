@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException, Request, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from pydantic import BaseModel
 from Doorlock import DoorLock
 import uvicorn
 
@@ -10,6 +11,9 @@ templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 door_lock = DoorLock()
+
+class KeyModel(BaseModel):
+    key: str
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
@@ -57,8 +61,9 @@ async def locked_page(request: Request):
     return templates.TemplateResponse("locked.html", {"request": request})
 
 @app.post("/key")
-async def handle_key(key: str):
-    print(key)
+async def handle_key(key_model: KeyModel):
+    
+    key = key_model.key
     
     door_lock.update_code(key)
     pin_status = door_lock.checkPin()
