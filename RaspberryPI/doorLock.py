@@ -1,11 +1,10 @@
 from gpiozero import AngularServo
 from time import sleep
 import Keypad
-import json
 import requests
 
 
-delay_seconds = 0.01
+delay_seconds = 0.001
 
 ang = 0
 
@@ -50,13 +49,16 @@ def loop():
     while True:
         key = keypad.getKey()
         if key != keypad.NULL:
-            response = requests.post('http://localhost:8000/key', json={'key': key})
-            print(response.pin)
-            pin = response.pin
-            
+
+            response = requests.post('http://192.168.2.172:8000/key', json={'key': key})
+            response_data = response.json()
+
+            pin = response_data.get("pin", "")
+            status = response_data.get("status","")
+
             print(f"Input: {pin}")
             
-            if response.pin_status == True:
+            if status == True:
                 moveServo(ang_open)
 
 if __name__ == '__main__':
@@ -66,5 +68,5 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print("Stopping")
         servo.close()
-        keypad.cleanup()
+        keypad.close()
         exit()
