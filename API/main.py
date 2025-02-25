@@ -61,8 +61,13 @@ async def handle_key(key: str):
     print(key)
     
     door_lock.update_code(key)
+    pin_status = door_lock.checkPin()
     
-    return {"message": f"Key received: {key}"}
+    return {"pin": door_lock.code, "status": pin_status}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
+    
+@app.post("/reset_pin")
+async def reset_pin():
+    door_lock.reset_code()

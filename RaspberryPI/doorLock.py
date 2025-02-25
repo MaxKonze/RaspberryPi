@@ -4,9 +4,6 @@ import Keypad
 import json
 import requests
 
-with open('config.json', 'r') as f:
-    config = json.load(f)
-    unlock_code = config['unlock_code']
 
 delay_seconds = 0.01
 
@@ -21,7 +18,7 @@ minPW = (0.5 + myCorrection) / 1000
 
 servo = AngularServo(16, initial_angle=ang, min_angle=0, max_angle=180, min_pulse_width=minPW, max_pulse_width=maxPW)
 
-code_input = ""
+pin = ""
 
 ROWS = 4
 COLS = 4
@@ -49,21 +46,18 @@ def moveServo(destination):
     ang = destination
 
 def loop():
-    global code_input
+    global pin
     while True:
         key = keypad.getKey()
         if key != keypad.NULL:
             response = requests.post('http://localhost:8000/key', json={'key': key})
-            print(response.message)
+            print(response.pin)
+            pin = response.pin
             
-            code_input += str(key)
-            print(f"Input: {code_input}")
+            print(f"Input: {pin}")
             
-            if code_input == unlock_code:
+            if response.pin_status == True:
                 moveServo(ang_open)
-                code_input = "" 
-            elif len(code_input) >= len(unlock_code):
-                code_input = ""
 
 if __name__ == '__main__':
     print("Starting")
