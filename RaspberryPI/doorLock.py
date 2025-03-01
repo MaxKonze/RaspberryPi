@@ -15,8 +15,8 @@ delay_seconds = 3
 
 ang = 0
 
-ang_open = 180
-ang_close = 0
+ang_open = 30
+ang_close = 30
 
 myCorrection = 0
 maxPW = (2.5 + myCorrection) / 1000
