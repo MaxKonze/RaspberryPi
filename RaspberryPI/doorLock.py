@@ -2,7 +2,12 @@ from gpiozero import AngularServo
 from time import sleep
 import Keypad
 import requests
+import json
 
+with open("config.json") as f:
+    config = json.load(f)
+    host = config["host"]
+    port = config["port"]
 
 delay_seconds = 0.001
 
@@ -50,7 +55,7 @@ def loop():
         key = keypad.getKey()
         if key != keypad.NULL:
 
-            response = requests.post('http://192.168.2.172:8000/key', json={'key': key})
+            response = requests.post(f'http://{host}{port}/key', json={'key': key})
             response_data = response.json()
 
             pin = response_data.get("pin", "")

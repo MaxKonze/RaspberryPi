@@ -10,8 +10,11 @@ class DoorLock:
             self.unlock_code = config['unlock_code']
 
     def reset_code(self):
-        self.code = self.code[-1]
-    
+        try:
+            self.code = self.code[-1]
+        except IndexError:
+            self.code = ""
+        
     def lock(self):
         self.locked = True
 
