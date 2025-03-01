@@ -15,8 +15,8 @@ delay_seconds = 3
 
 ang = 0
 
-ang_open = 30
-ang_close = 30
+ang_open = 1
+ang_close = -1
 
 myCorrection = 0
 maxPW = (2.5 + myCorrection) / 1000
@@ -44,7 +44,7 @@ closing_time = None
 
 
 def moveMotor(destination):
-    motor.moveSteps(1, delay_seconds, destination)
+    motor.moveSteps(destination, delay_seconds, 30)
 
 def loop():
     global pin, closing_time
