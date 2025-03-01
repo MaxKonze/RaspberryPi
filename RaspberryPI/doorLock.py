@@ -79,6 +79,8 @@ def loop():
             if status == True:
                 closing_time = datetime.now() + timedelta(seconds=time_opened)
                 moveServo(ang_open)
+                
+        sleep(1)
 
             
 if __name__ == '__main__':
