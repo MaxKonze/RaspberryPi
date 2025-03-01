@@ -3,6 +3,7 @@ from time import sleep
 import Keypad
 import requests
 import json
+from datetime import datetime, timedelta
 
 with open("config.json") as f:
     config = json.load(f)
@@ -37,6 +38,9 @@ col_Pins = [22, 27, 17, 4]
 keypad = Keypad.Keypad(keys, row_Pins, col_Pins, ROWS, COLS)
 keypad.setDebounceTime(50)
 
+time_opened = 10
+closing_time = None
+
 def moveServo(destination):
     global ang
     if destination > ang:
@@ -50,7 +54,7 @@ def moveServo(destination):
     ang = destination
 
 def loop():
-    global pin
+    global pin, opening_time
     while True:
         key = keypad.getKey()
         if key != keypad.NULL:
@@ -64,7 +68,12 @@ def loop():
             print(f"Input: {pin}")
             
             if status == True:
+                closing_time = datetime.now() + timedelta(seconds=time_opened)
                 moveServo(ang_open)
+                
+            if closing_time >= datetime.now():
+                moveServo(ang_close)
+                closing_time = None
 
 if __name__ == '__main__':
     print("Starting")
