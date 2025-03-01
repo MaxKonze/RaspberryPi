@@ -39,7 +39,7 @@ keypad = Keypad.Keypad(keys, row_Pins, col_Pins, ROWS, COLS)
 keypad.setDebounceTime(50)
 
 time_opened = 5
-closing_time = datetime.now()
+closing_time = None
 
 
 def moveServo(destination):
@@ -57,9 +57,10 @@ def moveServo(destination):
 def loop():
     global pin, closing_time
     while True:
-        if closing_time <= datetime.now():
+        if closing_time != None:
+            if closing_time <= datetime.now():
                 moveServo(ang_close)
-                closing_time = datetime.now()
+                closing_time = None
                 requests.post(f'http://{host}:{port}/lock')
 
         key = keypad.getKey()
