@@ -5,7 +5,7 @@ import requests
 import json
 from datetime import datetime, timedelta
 
-with open("config.json") as f:
+with open("/home/max/DoorLock/RaspberryPi/RaspberryPI/config.json") as f:
     config = json.load(f)
     host = config["host"]
     port = config["port"]
@@ -38,8 +38,9 @@ col_Pins = [22, 27, 17, 4]
 keypad = Keypad.Keypad(keys, row_Pins, col_Pins, ROWS, COLS)
 keypad.setDebounceTime(50)
 
-time_opened = 10
-closing_time = None
+time_opened = 5
+closing_time = datetime.now()
+
 
 def moveServo(destination):
     global ang
@@ -54,12 +55,18 @@ def moveServo(destination):
     ang = destination
 
 def loop():
-    global pin, opening_time
+    global pin, closing_time
     while True:
-        key = keypad.getKey()
-        if key != keypad.NULL:
+        if closing_time <= datetime.now():
+                moveServo(ang_close)
+                closing_time = datetime.now()
 
-            response = requests.post(f'http://{host}{port}/key', json={'key': key})
+        key = keypad.getKey()
+        status = requests.post(f'http://{host}:{port}/status').json().get("locked", "")
+
+        if key != keypad.NULL and status == True:
+
+            response = requests.post(f'http://{host}:{port}/key', json={'key': key})
             response_data = response.json()
 
             pin = response_data.get("pin", "")
@@ -70,11 +77,8 @@ def loop():
             if status == True:
                 closing_time = datetime.now() + timedelta(seconds=time_opened)
                 moveServo(ang_open)
-                
-            if closing_time >= datetime.now():
-                moveServo(ang_close)
-                closing_time = None
 
+            
 if __name__ == '__main__':
     print("Starting")
     try:
