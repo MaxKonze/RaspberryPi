@@ -64,9 +64,9 @@ def loop():
                 requests.post(f'http://{host}:{port}/lock')
 
         key = keypad.getKey()
-        status = requests.post(f'http://{host}:{port}/status').json().get("locked", "")
+        state = requests.post(f'http://{host}:{port}/status').json().get("locked", "")
 
-        if key != keypad.NULL and status == True:
+        if key != keypad.NULL and state == True:
 
             response = requests.post(f'http://{host}:{port}/key', json={'key': key})
             response_data = response.json()
