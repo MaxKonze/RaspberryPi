@@ -33,6 +33,7 @@ class DoorLock:
     
     def checkPin(self):
         if self.code == self.unlock_code:
+            self.unlock()
             return True
         else:
             return False

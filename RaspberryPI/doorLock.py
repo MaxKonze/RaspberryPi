@@ -60,6 +60,7 @@ def loop():
         if closing_time <= datetime.now():
                 moveServo(ang_close)
                 closing_time = datetime.now()
+                requests.post(f'http://{host}:{port}/lock')
 
         key = keypad.getKey()
         status = requests.post(f'http://{host}:{port}/status').json().get("locked", "")
