@@ -4,13 +4,14 @@ import Keypad
 import requests
 import json
 from datetime import datetime, timedelta
+import motor
 
 with open("/home/max/DoorLock/RaspberryPi/RaspberryPI/config.json") as f:
     config = json.load(f)
     host = config["host"]
     port = config["port"]
 
-delay_seconds = 0.001
+delay_seconds = 3
 
 ang = 0
 
@@ -42,24 +43,15 @@ time_opened = 5
 closing_time = None
 
 
-def moveServo(destination):
-    global ang
-    if destination > ang:
-        for angle in range(ang, destination):
-            servo.angle = angle
-            sleep(delay_seconds)
-    else:
-        for angle in range(ang, destination, -1):
-            servo.angle = angle
-            sleep(delay_seconds)
-    ang = destination
+def moveMotor(destination):
+    motor.moveSteps(1, delay_seconds, destination)
 
 def loop():
     global pin, closing_time
     while True:
         if closing_time != None:
             if closing_time <= datetime.now():
-                moveServo(ang_close)
+                moveMotor(ang_close)
                 closing_time = None
                 requests.post(f'http://{host}:{port}/lock')
 
@@ -78,7 +70,7 @@ def loop():
             
             if status == True:
                 closing_time = datetime.now() + timedelta(seconds=time_opened)
-                moveServo(ang_open)
+                moveMotor(ang_open)
     
 
             
