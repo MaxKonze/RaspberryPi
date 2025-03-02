@@ -21,9 +21,7 @@ def moveOnePeriod(direction,ms):
 def moveSteps(direction, ms, steps):
     for i in range(steps):
         moveOnePeriod(direction, ms)
-
-
-
+    
 def motorStop():
     for i in range(0,4,1):
         motors.off()

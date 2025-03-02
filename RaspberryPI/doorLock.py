@@ -13,16 +13,8 @@ with open("/home/max/DoorLock/RaspberryPi/RaspberryPI/config.json") as f:
 
 delay_seconds = 3
 
-ang = 0
-
-ang_open = -10
-ang_close = 10
-
-myCorrection = 0
-maxPW = (2.5 + myCorrection) / 1000
-minPW = (0.5 + myCorrection) / 1000
-
-servo = AngularServo(16, initial_angle=ang, min_angle=0, max_angle=180, min_pulse_width=minPW, max_pulse_width=maxPW)
+ang_open = 1
+ang_close = -1
 
 pin = ""
 
@@ -44,7 +36,7 @@ closing_time = None
 
 
 def moveMotor(destination):
-    motor.moveSteps(destination, delay_seconds, 180)
+    motor.moveSteps(destination, delay_seconds, 30)
 
 def loop():
     global pin, closing_time
@@ -80,5 +72,4 @@ if __name__ == '__main__':
         loop()
     except KeyboardInterrupt:
         print("Stopping")
-        servo.close()
         exit()
