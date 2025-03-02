@@ -31,7 +31,7 @@ col_Pins = [22, 27, 17, 4]
 keypad = Keypad.Keypad(keys, row_Pins, col_Pins, ROWS, COLS)
 keypad.setDebounceTime(50)
 
-time_opened = 5
+time_opened = 15
 closing_time = None
 
 
