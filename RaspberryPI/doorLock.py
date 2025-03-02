@@ -36,7 +36,7 @@ closing_time = None
 
 
 def moveMotor(destination):
-    motor.moveSteps(destination, delay_seconds, 30)
+    motor.moveSteps(destination, delay_seconds, 100)
 
 def loop():
     global pin, closing_time
@@ -48,9 +48,14 @@ def loop():
                 requests.post(f'http://{host}:{port}/lock')
 
         key = keypad.getKey()
-        state = requests.post(f'http://{host}:{port}/status').json().get("locked", "")
+        
 
-        if key != keypad.NULL and state == True:
+        if key != keypad.NULL:
+
+            state = requests.post(f'http://{host}:{port}/status').json().get("locked", "")
+
+            if state == True:
+                continue
 
             response = requests.post(f'http://{host}:{port}/key', json={'key': key})
             response_data = response.json()
