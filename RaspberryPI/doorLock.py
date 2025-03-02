@@ -31,12 +31,16 @@ col_Pins = [22, 27, 17, 4]
 keypad = Keypad.Keypad(keys, row_Pins, col_Pins, ROWS, COLS)
 keypad.setDebounceTime(50)
 
+<<<<<<< HEAD
 time_opened = 15
+=======
+time_opened = 10
+>>>>>>> 26919edeb7c330c29044ce556e93daf1d415d5b1
 closing_time = None
 
 
 def moveMotor(destination):
-    motor.moveSteps(destination, delay_seconds, 100)
+    motor.moveSteps(destination, delay_seconds, 200)
 
 def loop():
     global pin, closing_time
@@ -45,7 +49,7 @@ def loop():
             if closing_time <= datetime.now():
                 moveMotor(ang_close)
                 closing_time = None
-                requests.post(f'http://{host}:{port}/lock')
+                requests.get(f'http://{host}:{port}/lock')
 
         key = keypad.getKey()
         
@@ -54,7 +58,7 @@ def loop():
 
             state = requests.post(f'http://{host}:{port}/status').json().get("locked", "")
 
-            if state == True:
+            if state == False:
                 continue
 
             response = requests.post(f'http://{host}:{port}/key', json={'key': key})
