@@ -73,6 +73,7 @@ def loop():
             
 if __name__ == '__main__':
     print("Starting")
+    requests.post(f'http://{host}:{port}/reset_pin')
     try:
         loop()
     except KeyboardInterrupt:
