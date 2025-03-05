@@ -39,7 +39,8 @@ async def lock_door():
     door_lock.lock()
     
     for client in connected_clients:
-        await client.send_text("lock")
+        if door_lock.is_locked() == False:
+            await client.send_text("lock")
 
     
     return {"message": "Tür verriegelt"}
@@ -50,7 +51,8 @@ async def unlock_door():
     door_lock.unlock()
     
     for client in connected_clients:
-        await client.send_text("unlock")
+        if door_lock.is_locked() == True:
+            await client.send_text("unlock")
 
     
     return {"message": "Tür entriegelt"}

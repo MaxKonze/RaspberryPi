@@ -34,6 +34,7 @@ def moveMotor(destination):
     motor.moveSteps(destination, delay_seconds, 200)
 
 async def websocket_listener():
+    global closing_time
     uri = f"ws://{host}:{port}/ws" 
 
     async with websockets.connect(uri) as websocket:
@@ -47,6 +48,7 @@ async def websocket_listener():
                 moveMotor(ang_close)
 
             elif message == "unlock":
+                closing_time = datetime.now() + timedelta(seconds=time_opened)
                 moveMotor(ang_open)
 
 def keypad_loop():
@@ -71,7 +73,7 @@ def keypad_loop():
             pin = response_data.get("pin", "")
             status = response_data.get("status", "")
 
-            print(f"🔢 Eingabe: {pin}")
+            print(f" Eingabe: {pin}")
 
             if status:
                 closing_time = datetime.now() + timedelta(seconds=time_opened)
