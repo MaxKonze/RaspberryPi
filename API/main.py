@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Request, Depends
+from fastapi import FastAPI, HTTPException, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -11,6 +11,8 @@ templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 door_lock = DoorLock()
+
+connected_clients = []
 
 class KeyModel(BaseModel):
     key: str
@@ -36,12 +38,21 @@ async def lock_door():
     
     door_lock.lock()
     
+    for client in connected_clients:
+        await client.send_text("lock")
+
+    
     return {"message": "Tür verriegelt"}
 
 @app.post("/unlock")
 async def unlock_door():
     
     door_lock.unlock()
+    
+    for client in connected_clients:
+        await client.send_text("unlock")
+
+    
     return {"message": "Tür entriegelt"}
 
 @app.get("/status-page", response_class=HTMLResponse)
@@ -73,6 +84,20 @@ async def handle_key(key_model: KeyModel):
 @app.post("/reset_pin")
 async def reset_pin():
     door_lock.reset_code()
+    
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    """Verbindet Raspberry Pi über WebSocket"""
+    await websocket.accept()
+    connected_clients.append(websocket)
+    print("Raspberry Pi verbunden!")
+
+    try:
+        while True:
+            message = await websocket.receive_text()
+    except WebSocketDisconnect:
+        connected_clients.remove(websocket)
+        print("Raspberry Pi getrennt!")
     
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
