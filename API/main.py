@@ -81,6 +81,9 @@ async def handle_key(key_model: KeyModel):
     door_lock.update_code(key)
     pin_status = door_lock.checkPin()
     
+    for client in connected_clients:
+        await client.send_text("key")
+    
     return {"pin": door_lock.code, "status": pin_status}
     
 @app.post("/reset_pin")
