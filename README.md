@@ -10,7 +10,7 @@ This project is designed to control a door lock using a Raspberry Pi. It include
 
 ## Setup
 
-1. Clone the repository to your Raspberry Pi:
+1. Clone the repository to your PC (API Host):
     ```sh
     git clone https://github.com/yourusername/DoorLock.git
     ```
