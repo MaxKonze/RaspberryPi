@@ -39,8 +39,7 @@ async def lock_door():
     door_lock.lock()
     
     for client in connected_clients:
-        if door_lock.is_locked() == False:
-            await client.send_text("lock")
+        await client.send_text("lock")
 
     
     return {"message": "Tür verriegelt"}
@@ -82,7 +81,10 @@ async def handle_key(key_model: KeyModel):
     pin_status = door_lock.checkPin()
     
     for client in connected_clients:
-        await client.send_text("key")
+        if pin_status == True:
+            await client.send_text("unlock")
+        else:
+            await client.send_text("key")
     
     return {"pin": door_lock.code, "status": pin_status}
     
@@ -92,17 +94,16 @@ async def reset_pin():
     
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
-    """Verbindet Raspberry Pi über WebSocket"""
     await websocket.accept()
     connected_clients.append(websocket)
-    print("Raspberry Pi verbunden!")
+    print("Device connected")
 
     try:
         while True:
             message = await websocket.receive_text()
     except WebSocketDisconnect:
         connected_clients.remove(websocket)
-        print("Raspberry Pi getrennt!")
+        print("Device disconnected")
     
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
