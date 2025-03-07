@@ -43,10 +43,10 @@ async def get_status():
 @app.get("/lock")
 async def lock_door():
     
-    door_lock.lock()
-    
     for client in connected_clients:
         await client.send_text("lock")
+        
+    door_lock.lock()
 
     
     return {"message": "Tür verriegelt"}
@@ -55,12 +55,12 @@ async def lock_door():
 async def unlock_door():
     global closing_time
     
-    door_lock.unlock()
-    
     if door_lock.is_locked() == True:
         for client in connected_clients:
             await client.send_text("unlock")
-        closing_time = datetime.now() + timedelta(seconds=door_lock.get_opentime())
+        #closing_time = datetime.now() + timedelta(seconds=door_lock.get_opentime())
+        
+    door_lock.unlock()
     
     return {"message": "Tür entriegelt"}
 
