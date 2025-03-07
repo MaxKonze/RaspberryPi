@@ -16,7 +16,7 @@ def moveOnePeriod(direction,ms):
                 motors[i].on() if CWStep[j] == 1<<i else motors[i].off()
             if(ms<3): 
                 ms = 3
-            time.sleep(0.001)
+            time.sleep(0.0005)
             
 def moveSteps(direction, ms, steps):
     for i in range(steps):
