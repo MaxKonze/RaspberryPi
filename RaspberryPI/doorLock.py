@@ -2,7 +2,6 @@ import asyncio
 import websockets
 import json
 import requests
-from datetime import datetime, timedelta
 import Keypad
 import motor
 
@@ -48,6 +47,8 @@ async def websocket_listener():
                 moveMotor(ang_close)
             elif state == True and message == "unlock":
                 moveMotor(ang_open)
+                
+            print(state, message)
 
 def keypad_loop():
     while True:

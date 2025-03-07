@@ -115,6 +115,7 @@ async def websocket_endpoint(websocket: WebSocket):
         print("Device disconnected")
         
 async def auto_close():
+    global closing_time
     while True:
         now = datetime.now().time()
         if closing_time == None:
