@@ -4,6 +4,7 @@ class DoorLock:
     def __init__(self):
         self.locked = False
         self.code = ""
+        self.opentime = 10
         
         with open('config.json', 'r') as f:
             config = json.load(f)
@@ -37,3 +38,6 @@ class DoorLock:
         
     def get_length(self):
         return len(self.code)
+    
+    def get_opentime(self):
+        return self.opentime

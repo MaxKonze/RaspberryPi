@@ -4,18 +4,25 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from Doorlock import DoorLock
+from datetime import datetime, timedelta
 import uvicorn
+import asyncio
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 door_lock = DoorLock()
+closing_time = None
 
 connected_clients = []
 
 class KeyModel(BaseModel):
     key: str
+    
+@app.on_event("startup")
+async def startup_event():
+    asyncio.create_task(auto_close())
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
@@ -46,13 +53,14 @@ async def lock_door():
 
 @app.post("/unlock")
 async def unlock_door():
+    global closing_time
     
     door_lock.unlock()
     
-    for client in connected_clients:
-        if door_lock.is_locked() == True:
+    if door_lock.is_locked() == True:
+        for client in connected_clients:
             await client.send_text("unlock")
-
+        closing_time = datetime.now() + timedelta(seconds=door_lock.get_opentime())
     
     return {"message": "Tür entriegelt"}
 
@@ -105,6 +113,18 @@ async def websocket_endpoint(websocket: WebSocket):
     except WebSocketDisconnect:
         connected_clients.remove(websocket)
         print("Device disconnected")
+        
+async def auto_close():
+    while True:
+        now = datetime.now().time()
+        if closing_time == None:
+            await asyncio.sleep(1)
+            continue
+        if now >= closing_time:
+            lock_door()
+            closing_time = None
+        await asyncio.sleep(1)
+
     
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
