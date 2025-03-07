@@ -45,11 +45,13 @@ async def websocket_listener():
             print(f"WebSocket-Befehl erhalten: {message}")
 
             if message == "lock":
-                moveMotor(ang_close)
+                pass
+                #moveMotor(ang_close)
 
             elif message == "unlock":
-                closing_time = datetime.now() + timedelta(seconds=time_opened)
-                moveMotor(ang_open)
+                #closing_time = datetime.now() + timedelta(seconds=time_opened)
+                #moveMotor(ang_open)
+                pass
 
 def keypad_loop():
     global closing_time

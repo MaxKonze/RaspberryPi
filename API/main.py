@@ -84,7 +84,8 @@ async def handle_key(key_model: KeyModel):
         if pin_status == True:
             await client.send_text("unlock")
         else:
-            await client.send_text("key")
+            length = door_lock.get_length()
+            await client.send_text(f"key{length}")
     
     return {"pin": door_lock.code, "status": pin_status}
     

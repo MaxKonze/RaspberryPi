@@ -34,3 +34,6 @@ class DoorLock:
             return True
         else:
             return False
+        
+    def get_length(self):
+        return len(self.code)

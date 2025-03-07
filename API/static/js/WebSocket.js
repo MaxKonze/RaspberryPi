@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
     const ws = new WebSocket("ws://localhost:8000/ws");
+    let pinCode_length = 0;
 
     ws.onopen = () => {
         console.log("Verbunden mit WebSocket-Server");
@@ -11,8 +12,11 @@ document.addEventListener("DOMContentLoaded", function() {
         if (message === "lock" || message === "unlock") {
             window.location.reload();
         }
-        if (message === "key") {
+        if (message.slice(0,3) === "key") {
             console.log("Key received");
+            pinCode_length = message.slice(4);
+
+            window.updatePinDisplay(pinCode_length);
         }
 
     };

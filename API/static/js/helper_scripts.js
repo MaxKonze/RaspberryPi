@@ -1,11 +1,12 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const unlockButton = document.getElementById("unlockButton");
+    const pinDisplay = document.getElementById("pinDisplay");
+    let pinCode_length = 0;
 
-    unlockButton.addEventListener("click", function() {
-        fetch("/unlock", {
-            method: "POST"
-        });
+    function updatePinDisplay(pinCodeL) {
+        pinCode_length = pinCodeL;
+        pinDisplay.textContent = '*'.repeat(pinCode_length);
+    }
 
-        window.location.reload();
-    });
-} );
+    window.updatePinDisplay = updatePinDisplay;
+    
+});
