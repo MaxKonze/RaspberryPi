@@ -4,11 +4,12 @@ class DoorLock:
     def __init__(self):
         self.locked = False
         self.code = ""
-        self.opentime = 10
+        self.opentime = 20
         
         with open('config.json', 'r') as f:
             config = json.load(f)
             self.unlock_code = config['unlock_code']
+            self.opentime = config['opentime']
 
     def reset_code(self):
         self.code = ""
@@ -31,7 +32,6 @@ class DoorLock:
     
     def checkPin(self):
         if self.code == self.unlock_code:
-            self.unlock()
             return True
         else:
             return False

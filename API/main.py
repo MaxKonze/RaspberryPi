@@ -55,11 +55,11 @@ async def lock_door():
 async def unlock_door():
     global closing_time
     
-    if door_lock.is_locked() == True:
-        for client in connected_clients:
+    for client in connected_clients:
+        if door_lock.is_locked():
             await client.send_text("unlock")
-        #closing_time = datetime.now() + timedelta(seconds=door_lock.get_opentime())
-        
+            closing_time = datetime.now() + timedelta(seconds=door_lock.get_opentime())
+            
     door_lock.unlock()
     
     return {"message": "Tür entriegelt"}
@@ -90,7 +90,7 @@ async def handle_key(key_model: KeyModel):
     
     for client in connected_clients:
         if pin_status == True:
-            await client.send_text("unlock")
+            await unlock_door()
         else:
             length = door_lock.get_length()
             await client.send_text(f"key{length}")
@@ -117,12 +117,13 @@ async def websocket_endpoint(websocket: WebSocket):
 async def auto_close():
     global closing_time
     while True:
-        now = datetime.now().time()
+        #print(closing_time)
+        now = datetime.now()
         if closing_time == None:
             await asyncio.sleep(1)
             continue
         if now >= closing_time:
-            lock_door()
+            await lock_door()
             closing_time = None
         await asyncio.sleep(1)
 
