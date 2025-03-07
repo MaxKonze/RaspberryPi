@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         if (message.slice(0,3) === "key") {
             console.log("Key received");
-            pinCode_length = message.slice(4);
+            pinCode_length = message.slice(3,4);
 
             window.updatePinDisplay(pinCode_length);
         }
