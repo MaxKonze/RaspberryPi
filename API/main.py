@@ -5,7 +5,6 @@ from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from Doorlock import DoorLock
 from datetime import datetime, timedelta
-from time import sleep
 import uvicorn
 import asyncio
 
@@ -24,6 +23,13 @@ class KeyModel(BaseModel):
 @app.on_event("startup")
 async def startup_event():
     asyncio.create_task(auto_close())
+    
+@app.on_event("shutdown")
+async def shutdown_event():
+    print("Shutting down")
+    for client in connected_clients:
+        await client.send_text("exit")
+
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
@@ -48,7 +54,7 @@ async def lock_door():
         if door_lock.is_locked() == False:
             await client.send_text("lock")
             
-    sleep(1)
+    await asyncio.sleep(1)
         
     door_lock.lock()
 
@@ -63,7 +69,7 @@ async def unlock_door():
             await client.send_text("unlock")
             closing_time = datetime.now() + timedelta(seconds=door_lock.get_opentime())
             
-    sleep(1)
+    await asyncio.sleep(1)
             
     door_lock.unlock()
     
@@ -138,8 +144,4 @@ async def auto_close():
 
     
 if __name__ == "__main__":
-    try:
-        uvicorn.run(app, host="0.0.0.0", port=8000)
-    except KeyboardInterrupt:
-        for client in connected_clients:
-            client.send_text("exit")
+    uvicorn.run(app, host="0.0.0.0", port=8000)
