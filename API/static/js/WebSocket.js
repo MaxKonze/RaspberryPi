@@ -26,6 +26,5 @@ document.addEventListener("DOMContentLoaded", function() {
 
     ws.onclose = () => {
         console.log("Verbindung zum WebSocket-Server getrennt");
-    };
-
+    };    
 });

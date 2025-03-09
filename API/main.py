@@ -44,7 +44,8 @@ async def get_status():
 async def lock_door():
     
     for client in connected_clients:
-        await client.send_text("lock")
+        if door_lock.is_locked() == False:
+            await client.send_text("lock")
         
     door_lock.lock()
 
@@ -133,4 +134,8 @@ async def auto_close():
 
     
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    try:
+        uvicorn.run(app, host="0.0.0.0", port=8000)
+    except KeyboardInterrupt:
+        for client in connected_clients:
+            client.send_text("exit")

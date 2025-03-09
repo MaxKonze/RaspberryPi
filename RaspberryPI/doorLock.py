@@ -40,6 +40,9 @@ async def websocket_listener():
             message = await websocket.recv()
             print(f"WebSocket-Befehl erhalten: {message}")
 
+            if message == "exit":
+               raise KeyboardInterrupt 
+            
             if message == "lock" or message == "unlock":
                 state = requests.post(f'http://{host}:{port}/status').json().get("locked", "")
             
@@ -48,7 +51,6 @@ async def websocket_listener():
             elif state == False and message == "unlock":
                 moveMotor(ang_open)
                 
-            print(state, message)
 
 def keypad_loop():
     while True:

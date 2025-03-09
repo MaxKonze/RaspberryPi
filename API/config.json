@@ -1,5 +1,8 @@
 {
     "unlock_code": "1111",
 
-    "opentime" : 20
+    "opentime" : 20,
+
+    "host": "192.168.2.172",
+    "port": 8000
 }
