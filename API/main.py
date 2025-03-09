@@ -5,6 +5,7 @@ from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from Doorlock import DoorLock
 from datetime import datetime, timedelta
+from time import sleep
 import uvicorn
 import asyncio
 
@@ -46,10 +47,11 @@ async def lock_door():
     for client in connected_clients:
         if door_lock.is_locked() == False:
             await client.send_text("lock")
+            
+    sleep(1)
         
     door_lock.lock()
 
-    
     return {"message": "Tür verriegelt"}
 
 @app.post("/unlock")
@@ -60,6 +62,8 @@ async def unlock_door():
         if door_lock.is_locked():
             await client.send_text("unlock")
             closing_time = datetime.now() + timedelta(seconds=door_lock.get_opentime())
+            
+    sleep(1)
             
     door_lock.unlock()
     
