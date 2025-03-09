@@ -91,9 +91,13 @@ async def handle_key(key_model: KeyModel):
     for client in connected_clients:
         if pin_status == True:
             await unlock_door()
+        elif pin_status == False and door_lock.get_length() == 4:
+            await client.send_text("false")
         else:
             length = door_lock.get_length()
             await client.send_text(f"key{length}")
+            
+    door_lock.reset_code()
     
     return {"pin": door_lock.code, "status": pin_status}
     
@@ -117,13 +121,13 @@ async def websocket_endpoint(websocket: WebSocket):
 async def auto_close():
     global closing_time
     while True:
-        #print(closing_time)
         now = datetime.now()
         if closing_time == None:
             await asyncio.sleep(1)
             continue
         if now >= closing_time:
-            await lock_door()
+            if door_lock.is_locked() == False:
+                await lock_door()
             closing_time = None
         await asyncio.sleep(1)
 

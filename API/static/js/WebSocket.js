@@ -12,6 +12,9 @@ document.addEventListener("DOMContentLoaded", function() {
         if (message === "lock" || message === "unlock") {
             window.location.reload();
         }
+        if (message === "false")
+            window.shakePinDisplay()
+
         if (message.slice(0,3) === "key") {
             console.log("Key received");
             pinCode_length = message.slice(3,4);

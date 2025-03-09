@@ -12,7 +12,8 @@ class DoorLock:
             self.opentime = config['opentime']
 
     def reset_code(self):
-        self.code = ""
+        if len(self.code) >= 4:
+            self.code = ""
         
     def lock(self):
         self.locked = True
@@ -26,9 +27,6 @@ class DoorLock:
     
     def update_code(self, code):
         self.code += code
-        
-        if len(self.code) > 4:
-            self.reset_code()
     
     def checkPin(self):
         if self.code == self.unlock_code:
