@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const ws = new WebSocket("ws://192.168.2.172:8000/ws");
+    const ws = new WebSocket("ws://localhost:8000/ws");
     let pinCode_length = 0;
 
     ws.onopen = () => {
