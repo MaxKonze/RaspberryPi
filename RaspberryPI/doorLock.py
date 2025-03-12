@@ -42,13 +42,10 @@ async def websocket_listener():
 
             if message == "exit":
                raise KeyboardInterrupt 
-            
-            if message == "lock" or message == "unlock":
-                state = requests.post(f'http://{host}:{port}/status').json().get("locked", "")
-            
-            if state == False and message == "lock":
+           
+            if message == "lock":
                 moveMotor(ang_close)
-            elif state == True and message == "unlock":
+            elif message == "unlock":
                 moveMotor(ang_open)
                 
 

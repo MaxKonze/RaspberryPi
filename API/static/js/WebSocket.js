@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
     ws.onmessage = (event) => {
         const message = event.data;
         console.log(`Nachricht vom Server: ${message}`);
-        if (message === "lock" || message === "unlock") {
+        if (message === "lock" || message === "unlock" || message === "reload") {
             window.location.reload();
         }
         if (message === "false")

@@ -53,6 +53,8 @@ async def lock_door():
     for client in connected_clients:
         if door_lock.is_locked() == False:
             await client.send_text("lock")
+        else:
+            await client.send_text("reload")
             
     await asyncio.sleep(1)
         
@@ -68,6 +70,8 @@ async def unlock_door():
         if door_lock.is_locked():
             await client.send_text("unlock")
             closing_time = datetime.now() + timedelta(seconds=door_lock.get_opentime())
+        else:
+            await client.send_text("reload")
             
     await asyncio.sleep(1)
             
