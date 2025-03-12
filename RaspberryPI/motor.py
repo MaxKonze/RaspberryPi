@@ -20,7 +20,6 @@ def moveOnePeriod(direction,ms):
             
 def moveSteps(direction, ms, steps):
     for i in range(steps):
-        print("step:"+str(i))
         moveOnePeriod(direction, ms)
     
 def motorStop():
