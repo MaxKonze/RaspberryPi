@@ -64,12 +64,13 @@ async def lock_door():
 async def unlock_door():
     global closing_time
     
-    if door_lock.is_locked() == True:
-        for client in connected_clients:
+    if door_lock.is_locked() == False:
+        closing_time = None
+    
+    for client in connected_clients:
+        if door_lock.is_locked() == True:
             await client.send_text("unlock")
-        closing_time = datetime.now() + timedelta(seconds=door_lock.get_opentime())
-        
-    await asyncio.sleep(1)
+            closing_time = datetime.now() + timedelta(seconds=door_lock.get_opentime())
     
     door_lock.unlock()
     
@@ -99,14 +100,15 @@ async def handle_key(key_model: KeyModel):
     door_lock.update_code(key)
     pin_status = door_lock.checkPin()
     
-    for client in connected_clients:
-        if pin_status == True:
-            await unlock_door()
-        elif pin_status == False and door_lock.get_length() == 4:
-            await client.send_text("false")
-        else:
-            length = door_lock.get_length()
-            await client.send_text(f"key{length}")
+    if pin_status == True:
+        await unlock_door()
+    else:
+        for client in connected_clients:
+            if pin_status == False and door_lock.get_length() == 4:
+                await client.send_text("false")
+            else:
+                length = door_lock.get_length()
+                await client.send_text(f"key{length}")
             
     door_lock.reset_code()
     
