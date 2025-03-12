@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", function() {
     lockButton.addEventListener("click", async function() {
         const response = await fetch("/lock");
         const data = await response.json();
-        updateStatus();
     });
 
     unlockButton.addEventListener("click", async function() {
@@ -16,7 +15,6 @@ document.addEventListener("DOMContentLoaded", function() {
             method: "POST"
         });
         const data = await response.json();
-        updateStatus();
     });
 
 

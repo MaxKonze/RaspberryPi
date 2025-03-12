@@ -55,8 +55,6 @@ async def lock_door():
             await client.send_text("lock")
         else:
             await client.send_text("reload")
-            
-    await asyncio.sleep(1)
         
     door_lock.lock()
 
