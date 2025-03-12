@@ -19,6 +19,7 @@ def moveOnePeriod(direction,ms):
             time.sleep(0.0001)
             
 def moveSteps(direction, ms, steps):
+    print(f"Moving motor: direction={direction}, ms={ms}, steps={steps}")
     for i in range(steps):
         moveOnePeriod(direction, ms)
     
