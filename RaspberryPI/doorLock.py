@@ -44,8 +44,11 @@ async def websocket_listener():
                raise KeyboardInterrupt 
            
             if message == "lock":
+                print("Locking...")
                 moveMotor(ang_close)
+                
             elif message == "unlock":
+                print("Unlocking...")
                 moveMotor(ang_open)
                 
 
