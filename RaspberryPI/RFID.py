@@ -1,4 +1,4 @@
-import MFRC522
+from RFID import MFRC522
 import time
 
 # Create an object of the class MFRC522
