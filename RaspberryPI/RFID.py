@@ -1,26 +1,29 @@
-from mfrc522 import MFRC522
+from RFID import MFRC522
 import time
 
-reader = MFRC522()
+# Create an object of the class MFRC522
+mfrc = MFRC522.MFRC522()
 
-def scanRFIDCARD():
-    (status, TagType) = reader.MFRC522_Request(reader.PICC_REQIDL)
-
-    if status == reader.MI_OK:
-        print("RFID-Karte erkannt!")
-
-
-        (status, uid) = reader.MFRC522_Anticoll()
-        print(uid)
-        
-        if status == reader.MI_OK:
-            uid_str = "-".join([str(i) for i in uid])
-            print(f"RFID UID: {uid_str}")
-            
-try:
+def read_uid():
+    print("Place the RFID card near the reader...")
+    
     while True:
-        scanRFIDCARD()
-        time.sleep(1) 
+        # Scan for cards
+        (status, TagType) = mfrc.MFRC522_Request(mfrc.PICC_REQIDL)
+        
+        # If a card is found
+        if status == mfrc.MI_OK:
+            print("Card detected")
+            
+            # Get the UID of the card
+            (status, uid) = mfrc.MFRC522_Anticoll()
+            
+            # If we have the UID, print it
+            if status == mfrc.MI_OK:
+                print(f"Card UID: {' '.join(map(str, uid))}")
+                break  # Exit after reading the card UID
 
-except KeyboardInterrupt:
-    print("Beendet")
+        time.sleep(1)
+
+if __name__ == "__main__":
+    read_uid()
