@@ -10,6 +10,7 @@ class DoorLock:
             config = json.load(f)
             self.unlock_code = config['unlock_code']
             self.opentime = config['opentime']
+            self.rfid = config['rfid']
 
     def reset_code(self):
         if len(self.code) >= 4:
@@ -39,3 +40,9 @@ class DoorLock:
     
     def get_opentime(self):
         return self.opentime
+    
+    def check_rfid(self, rfid):
+        if rfid == self.rfid:
+            return True
+        else:
+            return False

@@ -20,6 +20,9 @@ connected_clients = []
 class KeyModel(BaseModel):
     key: str
     
+class RFIDModel(BaseModel):
+    rfid: str
+    
 @app.on_event("startup")
 async def startup_event():
     asyncio.create_task(auto_close())
@@ -113,6 +116,21 @@ async def handle_key(key_model: KeyModel):
     door_lock.reset_code()
     
     return {"pin": door_lock.code, "status": pin_status}
+
+@app.post("/rfid")
+async def handle_rfid(rfid: RFIDModel):
+    
+    rfid = rfid.rfid
+    rfid_status = door_lock.check_rfid(rfid)
+    
+    if rfid_status == True:
+        await unlock_door()
+    else:
+        for client in connected_clients:
+            await client.send_text("false")
+    
+    return
+
     
 @app.post("/reset_pin")
 async def reset_pin():

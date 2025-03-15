@@ -1,3 +1,4 @@
+import RFID_reader
 import asyncio
 import websockets
 import json
@@ -54,6 +55,8 @@ def keypad_loop():
     while True:
         
         key = keypad.getKey()
+        
+        rfid = RFID_reader.read_uid()
 
         if key != keypad.NULL:
             state = requests.post(f'http://{host}:{port}/status').json().get("locked", "")
@@ -65,9 +68,13 @@ def keypad_loop():
             response_data = response.json()
 
             pin = response_data.get("pin", "")
-            status = response_data.get("status", "")
 
             print(f" Eingabe: {pin}")
+            
+        elif rfid != None:
+            response = requests.post(f'http://{host}:{port}/rfid', json={'rfid': rfid})
+
+            print(f" RFID: {rfid}")
 
 async def main():
     requests.post(f'http://{host}:{port}/reset_pin') 

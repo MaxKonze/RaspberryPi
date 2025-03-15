@@ -21,12 +21,12 @@ def read_uid():
         if status == mfrc.MI_OK:
             print(f"Card UID: {' '.join(map(str, uid))}")  
             
-            return True
+            return uid
 
-        time.sleep(1)
+    return None
 
 if __name__ == "__main__":
     while True:
-        st = read_uid()
-        if st:
+        status = read_uid()
+        if status:
             break
