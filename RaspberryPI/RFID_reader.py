@@ -1,8 +1,12 @@
-from RFID import MFRC522
+import sys
+import os
 import time
 
-# Create an object of the class MFRC522
-mfrc = MFRC522.MFRC522()
+sys.path.append(os.path.join(os.path.dirname(__file__), 'RFID'))
+
+from RFID.MFRC522 import MFRC522
+
+mfrc = MFRC522()
 
 def read_uid():
     print("Place the RFID card near the reader...")
