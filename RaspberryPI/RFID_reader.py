@@ -9,7 +9,6 @@ from RFID.MFRC522 import MFRC522
 mfrc = MFRC522()
 
 def read_uid():
-    print("Place the RFID card near the reader...")
     
     (status, TagType) = mfrc.MFRC522_Request(mfrc.PICC_REQIDL)
         
@@ -27,6 +26,7 @@ def read_uid():
 
 if __name__ == "__main__":
     while True:
+        print("Place the RFID card near the reader...")
         status = read_uid()
         if status:
             break
