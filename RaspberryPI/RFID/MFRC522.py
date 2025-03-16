@@ -408,7 +408,7 @@ class MFRC522:
 
   def MFRC522_Init(self):
 
-    self.MFRC522_Reset();
+    self.MFRC522_Reset()
     
     self.Write_MFRC522(self.TModeReg, 0x8D)
     self.Write_MFRC522(self.TPrescalerReg, 0x3E)
