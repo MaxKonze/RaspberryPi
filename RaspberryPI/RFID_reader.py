@@ -1,5 +1,6 @@
 import sys
 import os
+from time import sleep
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'RFID'))
 
@@ -29,3 +30,4 @@ if __name__ == "__main__":
         status = read_uid()
         if status:
             break
+        sleep(1)
