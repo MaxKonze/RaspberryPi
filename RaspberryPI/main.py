@@ -72,8 +72,8 @@ def keypad_loop():
             print(f" Eingabe: {pin}")
             
         elif rfid != None:
-            if key != keypad.NULL:
-                state = requests.post(f'http://{host}:{port}/status').json().get("locked", "")
+            
+            state = requests.post(f'http://{host}:{port}/status').json().get("locked", "")
 
             if state == False:
                 continue
