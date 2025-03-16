@@ -20,7 +20,7 @@ def read_uid():
         if status == mfrc.MI_OK:
             print(f"Card UID: {' '.join(map(str, uid))}")  
             
-            return uid
+            return ' '.join(map(str, uid))
 
     return None
 
